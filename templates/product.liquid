@@ -36,6 +36,8 @@ $(document).ready(function() {
       for (var i = 0; i < overviewContent.length; i++) {
         if (overviewContent[i] !== '') {
           overviewContentHTML[i] = "<li>" + overviewContent[i].trim() + "</li>";
+          $('#tabContent').css('order', '1');
+          $('#tabContent').css('-webkit-order', '1');
         }
       }
 
@@ -46,6 +48,8 @@ $(document).ready(function() {
       var suitesContentHTML = [];
       for (var i = 0; i < suitesContent.length; i++) {
         suitesContentHTML[i] = "<li>" + suitesContent[i] + "</li>";
+        $('#tabContent').css('order', '2');
+        $('#tabContent').css('-webkit-order', '2');
       }
 
       return $("#tabContent").html(suitesContentHTML);
@@ -55,6 +59,8 @@ $(document).ready(function() {
       var kitchenContentHTML = [];
       for (var i = 0; i < kitchenContent.length; i++) {
         kitchenContentHTML[i] = "<li>" + kitchenContent[i] + "</li>";
+        $('#tabContent').css('order', '3');
+        $('#tabContent').css('-webkit-order', '3');
       }
 
       return $("#tabContent").html(kitchenContentHTML);
@@ -64,6 +70,8 @@ $(document).ready(function() {
       var groundsContentHTML = [];
       for (var i = 0; i < groundsContent.length; i++) {
         groundsContentHTML[i] = "<li>" + groundsContent[i] + "</li>";
+        $('#tabContent').css('order', '4');
+        $('#tabContent').css('-webkit-order', '4');
       }
 
       return $("#tabContent").html(groundsContentHTML);
@@ -73,6 +81,8 @@ $(document).ready(function() {
       var recreationContentHTML = [];
       for (var i = 0; i < recreationContent.length; i++) {
         recreationContentHTML[i] = "<li>" + recreationContent[i] + "</li>";
+        $('#tabContent').css('order', '5');
+        $('#tabContent').css('-webkit-order', '5');
       }
 
       return $("#tabContent").html(recreationContentHTML);
@@ -129,6 +139,8 @@ $(document).ready(function() {
         <img src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" id="ProductPhotoImg">
       </div>
 
+      <span class="large--hide"><< swipe to see more images >></span>
+
       {% comment %}
         Create thumbnails if we have more than one product image
       {% endcomment %}
@@ -162,39 +174,39 @@ $(document).ready(function() {
       <div class="tabs">
         <ul>
           {% if product.metafields.c_f.overview %}
-            <li class="tab overview active">
+            <li class="tab overview active medium-down--two-thirds grid__item noFloat">
                 OVERVIEW
             </li
           {% endif %}
 
           {% if product.metafields.c_f.suites %}
-            ><li class="tab suites">
+            ><li class="tab suites medium-down--two-thirds grid__item noFloat">
                 SUITES
             </li
           {% endif %}
 
           {% if product.metafields.c_f.kitchen %}
-            ><li class="tab kitchen">
+            ><li class="tab kitchen medium-down--two-thirds grid__item noFloat">
                 KITCHEN
             </li
           {% endif %}
 
           {% if product.metafields.c_f.grounds %}
-            ><li class="tab grounds">
+            ><li class="tab grounds medium-down--two-thirds grid__item noFloat">
                 GROUNDS
             </li
           {% endif %}
 
           {% if product.metafields.c_f.recreation %}
-            ><li class="tab recreation">
+            ><li class="tab recreation medium-down--two-thirds grid__item noFloat">
                 RECREATION
             </li>
           {% endif %}
 
-        </ul>
-      </div>
+          <div id="tabContent" class="large--five-twelfths">
+          </div>
 
-      <div id="tabContent" class="large--five-twelfths">
+        </ul>
       </div>
 
 
@@ -210,7 +222,7 @@ $(document).ready(function() {
         {% endcomment %}
         {% comment %}
           ID addToCartForm is a selector for the ajax cart plugin
-        <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm" class="form-vertical overflow-hidden">
+        <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm" class="grid form-vertical overflow-hidden">
 
           {% comment %}
             Add product variants as a dropdown.
@@ -267,7 +279,7 @@ $(document).ready(function() {
         {% endcomment %}
 
         <div class="form-vertical text-center ten-twelfths grid">
-          {% form 'contact' %}
+          {% form 'contact', class: 'grid' %}
 
             {% comment %}
               Successful message
@@ -282,10 +294,10 @@ $(document).ready(function() {
 
             {% assign name_attr = 'contact.form.name' | t | handle %}
 
-            <div class="grid__item ten-twelfths text-center noFloat">
+            <div class="grid__item large--ten-twelfths text-center noFloat">
               <figure><img class="large--one-twelfth" src="{{ 'joe-new-blue-light-logo-07.svg' | asset_url }}"></figure>
               <div class="display-flex">
-                <hr class="" />
+                <hr class="medium-down--hide large--show" />
                 <h2 class="text-center">REQUEST A BOOKING</h2>
                 <hr class="" />
               </div>
@@ -310,7 +322,7 @@ $(document).ready(function() {
             </div>
 
             <div class="grid__item large--four-twelfths noFloat display--inline-block">
-              <h3 class="grid__item text-center">CONTACT DETAILS</h3>
+              <h3 class="grid__item text-center">BOOKING DETAILS</h3>
 
               <input type="select" name="contact[arrivalDate]" class="datepicker" placeholder="Arrival Date">
               <input type="select" name="contact[departureDate]" class="datepicker" placeholder="Departure Date">

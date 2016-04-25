@@ -869,13 +869,18 @@ h1, h2, h3, h4, h5, h6 {
 
 /*================ Use em() Sass function to declare font-size ================*/
 h1 {
-  font-size: em(47px);
+  font-size: em(28px);
+  @include at-query($min, $large) {
+    font-size: em(47px);
+  }
 }
 
 h2 {
   font-size: em(28px);
-  padding-top: 200px;
-  padding-bottom: 24px;
+  @include at-query ($min, $small) {
+    padding-top: 200px;
+    padding-bottom: 24px;
+  }
 }
 
 h3 {
@@ -887,7 +892,7 @@ h3 {
 h4 {
   font-size: em(20px);
   color: #c39a1e;
-  padding-top: 97px;
+  padding-top: 2em;
 }
 
 h5 {
@@ -1538,6 +1543,14 @@ textarea {
   min-height: 87px;
 }
 
+form figure {
+    width: 30%;
+    margin: 0 auto;
+    img {
+      padding: 0;
+    }
+}
+
 /* Calendar */
 .datepicker {
   background-position: right center;
@@ -1545,12 +1558,17 @@ textarea {
   background-repeat: no-repeat;
   background-position: right 10px center;
   cursor: pointer;
+  background-size: 1em;
 }
 
 .ui-datepicker {
     padding: 0 1em !important;
     border-radius: 0 !important;
     border: 1px solid #C39A1E !important;
+}
+
+div#ui-datepicker-div {
+    margin-top: -42px;
 }
 
 .ui-datepicker-title {
@@ -1566,7 +1584,17 @@ textarea {
     border: 0;
 }
 
-.ui-datepicker .ui-datepicker-prev:after,.ui-datepicker-next:after {
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker-next {
+  cursor: pointer;
+}
+
+.ui-state-hover {
+  background: transparent !important;
+  border: 0 !important;
+  font-weight: auto !important;
+}
+
+.ui-datepicker .ui-datepicker-prev:after, .ui-datepicker-next:after {
     font-family: "icons";
     text-decoration: none;
     speak: none;
@@ -1575,14 +1603,22 @@ textarea {
     display: block;
     color: #35353D;
     overflow: visible;
+    content: "";
+    width: 1em;
+    background-image: url("Arrows-02.svg");
+    height: 1em;
+    background-repeat: no-repeat;
+    margin-top: 3px;
 }
 
 .ui-datepicker-next:after {
-  transform: rotate(-90deg);
+  background-image: url('Arrows-01.svg');
+  background-position: right center;
 }
 
-.ui-datepicker-prev:after {
-  transform: rotate(90deg);
+.ui-datepicker-next:hover, .ui-datepicker-prev:hover {
+  top: 2px !important;
+  right: 2px !important;
 }
 
 .ui-datepicker .ui-datepicker-prev span, .ui-datepicker .ui-datepicker-next span {
@@ -1943,7 +1979,7 @@ label.error {
 ==============================================================================*/
 .site-header {
   padding: ($gutter / 2) 0;
-  background-color: rgba(255,255,255,1);
+  background-color: rgba(0,0,0,.7);
   color: white;
   position: relative;
   z-index: 3;
@@ -2066,16 +2102,20 @@ header div.grid__item h1 a img {
   .text-right & {
     margin: 0 (-$gutter / 2) 0 0;
   }
+
+  button {
+    background-color: transparent;
+  }
 }
 
 .site-nav__link {
   display: block;
   text-decoration: none;
   padding: $gutter;
+  padding-top: 15px;
   white-space: nowrap;
-  color: $colorNavText;
+  color: #C39A1E;
 
-  color: #006c95;
   font-size: 2em;
 
   &:hover,
@@ -2399,6 +2439,9 @@ header div.grid__item h1 a img {
   background-color: $colorFooterBg;
   color: $colorFooterText;
 
+  hr {
+    border-color: white;
+  }
 
   @include at-query ($min, $large) {
     padding: 0;
@@ -2499,7 +2542,14 @@ header div.grid__item h1 a img {
 }
 
 .product-single__photos {
-  margin-bottom: $gutter;
+  @include at-query ($min, $large) {
+    margin-bottom: $gutter;
+  }
+}
+
+.product-single .colorBackground {
+    background-color: #FBFBF9;
+    padding-top: 2em;
 }
 
 .product-single__photos,
@@ -2515,17 +2565,47 @@ header div.grid__item h1 a img {
 }
 
 .product-single h1 {
-margin-bottom: .5em;
+  margin-bottom: .5em;
 }
 
 .product-description {
   text-align: center;
-  margin: 4em auto;
+  margin: 2em auto;
+  padding: 0 $gutter/2;
+  @include at-query ($min, $large) {
+    margin: 4em auto;
+  }
 }
 
 
 .form-vertical .display-flex {
   align-items: center;
+  margin-bottom: 3em;
+  margin-top: 1em;
+  @include at-query ($max, $large) {
+    flex-direction: column;
+    margin-bottom: 0;
+  }
+}
+
+.form-vertical .display-flex hr:last-of-type {
+    @include at-query ($max, $large) {
+      border-color: #C39A1E !important;
+      width: 38.66667% !important;
+      margin: 1em 0 0 !important;
+    }
+}
+
+form p {
+    margin: 2em 0;
+}
+
+form h3 {
+    padding-bottom: 1em;
+}
+
+form input[type="submit"] {
+    padding: 1em 3em;
 }
 
 .form-vertical {
@@ -2534,26 +2614,51 @@ margin-bottom: .5em;
     overflow: auto;
     border: 2px solid #C39A1E;
     border-radius: 10px;
+    padding: 1em;
+    @include at-query($min, $large) {
+      padding: 0;
+    }
 }
 
-.contact-form hr {
+#contact_form hr {
   margin: 0 auto;
   float: none;
   width: 100%;
   border-color: #35353D;
 }
 
-.contact-form h2 {
+#contact_form h2 {
   padding: inherit;
   width: 100%;
   margin: 0 4%;
 }
 
-.contact-form .ten-twelfths {
+#contact_form .ten-twelfths {
     margin: 0 auto;
     float: none;
     overflow: auto;
 }
+
+/* Center the logo and title */
+form .grid__item.large--ten-twelfths.text-center.noFloat {
+    margin: 0 auto;
+}
+
+.tabs ul {
+  margin-left: 0;
+  @include at-query ($max, $large) {
+    display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;    /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;  /* TWEENER - IE 10 */
+    display: -webkit-flex; /* NEW - Chrome - Safari 8 */
+    display: flex;
+    -webkit-justify-content: center; /* Safari 8 */
+    justify-content: center;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+  }
+}
+
 .tab {
   display: inline-block;
   letter-spacing: 7px;
@@ -2567,6 +2672,8 @@ margin-bottom: .5em;
   font-size: 1.5em;
   font-weight: 100;
   padding: 0 1em;
+  margin-left: auto;
+  margin-right: auto;
 
 @include at-query ($max, $large){
  display: block;
@@ -2578,17 +2685,53 @@ margin-bottom: .5em;
  font-family: "Quattrocentro", serif;
  color:#ccccb3;
  }
+
+ @include at-query ($min, $large) {
+   width: auto;
+ }
+}
+
+.tab.overview {
+  @include at-query ($max, $large) {
+    order: 1;
+  }
+}
+
+.tab.suites {
+  @include at-query ($max, $large) {
+    order: 2;
+  }
+}
+
+.tab.kitchen {
+  @include at-query ($max, $large) {
+    order: 3;
+  }
+}
+
+.tab.grounds {
+  @include at-query ($max, $large) {
+    order: 4;
+  }
+}
+
+.tab.recreation {
+  @include at-query ($max, $large) {
+    order: 5;
+  }
 }
 
 .tab.active{
   color:#C39A1E;
   border-color: #C39A1E;
+  margin-bottom: 0;
 
 
  @include at-query ($min, $large){
   color:#C39A1E;
   border-color: #C39A1E;
   border-bottom-width:10px;
+  margin-bottom: 25px;
 }
 
 }
@@ -2596,12 +2739,20 @@ margin-bottom: .5em;
 #tabContent {
   margin: 0 auto;
   text-align: left;
+  order: 1;
+  padding: 0 $gutter;
 }
-#tabContent  li{
-  width: 50%;
-  text-align: left;
-  vertical-align: top;
-  margin: 1em 0;
+#tabContent li{
+  display: block;
+  margin: 1em auto;
+  text-align: center;
+  @include at-query($min, $large) {
+    width: 50%;
+    text-align: left;
+    vertical-align: top;
+    display: inline-block;
+    margin: 1em 0;
+  }
 }
 
 /*============================================================================
@@ -2901,30 +3052,45 @@ margin-bottom: .5em;
    color: #000;
    padding-bottom:47px;
  }
- .text-center{ span{
-   font-family:"Quattrocento", serif;
-   font-size: 35px;
-   font-style: normal;
-   letter-spacing: .21em;
-   color: $colorBtnPrimary;
-   padding-bottom: 50px;
-
+ .text-center{
+   span {
+     font-family:"Quattrocento", serif;
+     font-size: 2em;
+     font-style: normal;
+     letter-spacing: .21em;
+     color: $colorBtnPrimary;
+     padding-bottom: 50px;
   }
 }
-  .subText a{
-    font-size: 18px;
-    color: #9D9D9D;
-    font-style:italic;
-    font-family: "Quattrocento Sans", sans-serif;
-    letter-spacing: .17em;
+.subText a{
+  font-size: 18px;
+  color: #9D9D9D;
+  font-style:italic;
+  font-family: "Quattrocento Sans", sans-serif;
+  letter-spacing: .17em;
 
+}
+
+div.product-single__photos img {
+    padding: 0 1em;
+}
+
+.product-single span {
+  font-size: .7em;
+  font-style: italic;
+  color: black;
+  margin: 1em 0;
+  padding: 0;
+  display: block;
+}
+
+form .grid__item {
+  img{
+    @include at-query($min, $large) {
+      padding-top: 4em;
+    }
   }
-  .grid__item {
-    img{
-    padding-top: 85px;
-    padding-bottom: 60px;
-    }
-    p{
+  p{
     padding-top:65px;
-    }
+  }
 }
