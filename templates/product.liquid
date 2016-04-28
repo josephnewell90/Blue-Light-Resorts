@@ -9,6 +9,119 @@
 
 {% endcomment %}
 
+<script>
+//Initialize the tab content with overview metadata
+$(document).ready(function() {
+  var overviewContent = $("#overviewContent").html().trim().split("\n");
+  var overviewContentHTML = [];
+  for (var i = 0; i < overviewContent.length; i++) {
+    if (overviewContent[i] !== '' || overviewContent[i] !== '  ' ) {
+      overviewContentHTML[i] = "<li>" + overviewContent[i] + "</li>";
+    }
+  }
+
+  return $("#tabContent").html(overviewContentHTML);
+});
+
+//When user clicks on a tab, insert the appropriate metadata into the #tabContent
+$(document).ready(function() {
+  $(".tab").click(function() {
+    //Assign the current tab, unassign any others
+    $(".tab").removeClass("active");
+    $(this).addClass("active");
+    //Get which key of the metadata we are using and assign the hidden content to be the content in the tabContent div
+    if ($(this).hasClass("overview")) {
+      var overviewContent = $("#overviewContent").html().trim().split("\n");
+      var overviewContentHTML = [];
+      for (var i = 0; i < overviewContent.length; i++) {
+        if (overviewContent[i] !== '') {
+          overviewContentHTML[i] = "<li>" + overviewContent[i].trim() + "</li>";
+          $('#tabContent').css('order', '1');
+          $('#tabContent').css('-webkit-order', '1');
+        }
+      }
+
+      return $("#tabContent").html(overviewContentHTML);
+    }
+    else if ($(this).hasClass("suites")) {
+      var suitesContent = $("#suitesContent").html().trim().split("\n");
+      var suitesContentHTML = [];
+      for (var i = 0; i < suitesContent.length; i++) {
+        suitesContentHTML[i] = "<li>" + suitesContent[i] + "</li>";
+        $('#tabContent').css('order', '2');
+        $('#tabContent').css('-webkit-order', '2');
+      }
+
+      return $("#tabContent").html(suitesContentHTML);
+    }
+    else if ($(this).hasClass("kitchen")) {
+      var kitchenContent = $("#kitchenContent").html().trim().split("\n");
+      var kitchenContentHTML = [];
+      for (var i = 0; i < kitchenContent.length; i++) {
+        kitchenContentHTML[i] = "<li>" + kitchenContent[i] + "</li>";
+        $('#tabContent').css('order', '3');
+        $('#tabContent').css('-webkit-order', '3');
+      }
+
+      return $("#tabContent").html(kitchenContentHTML);
+    }
+    else if ($(this).hasClass("grounds")) {
+      var groundsContent = $("#groundsContent").html().trim().split("\n");
+      var groundsContentHTML = [];
+      for (var i = 0; i < groundsContent.length; i++) {
+        groundsContentHTML[i] = "<li>" + groundsContent[i] + "</li>";
+        $('#tabContent').css('order', '4');
+        $('#tabContent').css('-webkit-order', '4');
+      }
+
+      return $("#tabContent").html(groundsContentHTML);
+    }
+    else if ($(this).hasClass("recreation")) {
+      var recreationContent = $("#recreationContent").html().trim().split("\n");
+      var recreationContentHTML = [];
+      for (var i = 0; i < recreationContent.length; i++) {
+        recreationContentHTML[i] = "<li>" + recreationContent[i] + "</li>";
+        $('#tabContent').css('order', '5');
+        $('#tabContent').css('-webkit-order', '5');
+      }
+
+      return $("#tabContent").html(recreationContentHTML);
+    }
+    //Assign the content in the #tabContent div to currentMetadata
+  });
+});
+</script>
+
+{% if product.metafields.c_f.overview %}
+  <div hidden id="overviewContent">
+      {{ product.metafields.c_f.overview }}
+  </div>
+{% endif %}
+
+{% if product.metafields.c_f.suites %}
+  <div hidden id="suitesContent">
+      {{ product.metafields.c_f.suites }}
+  </div>
+{% endif %}
+
+{% if product.metafields.c_f.kitchen %}
+  <div hidden id="kitchenContent">
+      {{ product.metafields.c_f.kitchen }}
+  </div>
+{% endif %}
+
+{% if product.metafields.c_f.grounds %}
+  <div hidden id="groundsContent">
+      {{ product.metafields.c_f.grounds }}
+  </div>
+{% endif %}
+
+{% if product.metafields.c_f.recreation %}
+  <div hidden id="recreationContent">
+      {{ product.metafields.c_f.recreation }}
+  </div>
+{% endif %}
+
 <div itemscope itemtype="http://schema.org/Product">
 
   <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
@@ -19,24 +132,24 @@
   {% endcomment %}
   {% assign current_variant = product.selected_or_first_available_variant %}
 
-  {% include 'breadcrumb' %}
-
-  <div class="grid product-single">
-    <div class="grid__item large--one-half text-center">
+    <div class="grid product-single">
+    <div class="grid__item text-center">
       <div class="product-single__photos" id="ProductPhoto">
         {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
         <img src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" id="ProductPhotoImg">
       </div>
 
+      <span class="large--hide"><< swipe to see more images >></span>
+
       {% comment %}
         Create thumbnails if we have more than one product image
       {% endcomment %}
       {% if product.images.size > 1 %}
-        <ul class="product-single__thumbnails grid-uniform" id="ProductThumbs">
+        <ul class="product-single__thumbnails grid-uniform text-center" id="ProductThumbs">
 
           {% for image in product.images %}
-            <li class="grid__item one-quarter">
-              <a href="{{ image.src | img_url: 'large' }}" class="product-single__thumbnail">
+            <li class="grid__item one-twelfth">
+              <a href="{{ image.src | img_url: 'master' }}" class="product-single__thumbnail">
                 <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
               </a>
             </li>
@@ -46,19 +159,70 @@
       {% endif %}
     </div>
 
-    <div class="grid__item large--one-half">
+    <div class="grid__item text-center colorBackground">
 
       <h1 itemprop="name">{{ product.title }}</h1>
 
-      <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-        <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+      <hr class="one-sixth">
 
-        <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
+
+
+      <div class="product-description rte large--one-half no-float" itemprop="description">
+        {{ product.description }}
+      </div>
+
+      <div class="tabs">
+        <ul>
+          {% if product.metafields.c_f.overview %}
+            <li class="tab overview active medium-down--two-thirds grid__item noFloat">
+                OVERVIEW
+            </li
+          {% endif %}
+
+          {% if product.metafields.c_f.suites %}
+            ><li class="tab suites medium-down--two-thirds grid__item noFloat">
+                SUITES
+            </li
+          {% endif %}
+
+          {% if product.metafields.c_f.kitchen %}
+            ><li class="tab kitchen medium-down--two-thirds grid__item noFloat">
+                KITCHEN
+            </li
+          {% endif %}
+
+          {% if product.metafields.c_f.grounds %}
+            ><li class="tab grounds medium-down--two-thirds grid__item noFloat">
+                GROUNDS
+            </li
+          {% endif %}
+
+          {% if product.metafields.c_f.recreation %}
+            ><li class="tab recreation medium-down--two-thirds grid__item noFloat">
+                RECREATION
+            </li>
+          {% endif %}
+
+          <div id="tabContent" class="large--five-twelfths">
+          </div>
+
+        </ul>
+      </div>
+
+
+      <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+
+
+
 
         {% comment %}
-          ID addToCartForm is a selector for the ajax cart plugin
+
+        WE NEED TO REPLACE THE BELOW FORM WITH A CONTACT FORM
+
         {% endcomment %}
-        <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm" class="form-vertical">
+        {% comment %}
+          ID addToCartForm is a selector for the ajax cart plugin
+        <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm" class="grid form-vertical overflow-hidden">
 
           {% comment %}
             Add product variants as a dropdown.
@@ -109,11 +273,75 @@
             <span id="AddToCartText">{{ 'products.product.add_to_cart' | t }}</span>
           </button>
         </form>
+        {% endcomment %}
+        {% comment %}
+          END ADD TO CART FORM
+        {% endcomment %}
 
-      </div>
+        <div class="form-vertical text-center ten-twelfths grid">
+          {% form 'contact', class: 'grid' %}
 
-      <div class="product-description rte" itemprop="description">
-        {{ product.description }}
+            {% comment %}
+              Successful message
+            {% endcomment %}
+            {% if form.posted_successfully? %}
+              <p class="note form-success">
+                {{ 'contact.form.post_success' | t }}
+              </p>
+            {% endif %}
+
+            {{ form.errors | default_errors }}
+
+            {% assign name_attr = 'contact.form.name' | t | handle %}
+
+            <div class="grid__item large--ten-twelfths text-center noFloat">
+              <figure><img class="large--one-twelfth" src="{{ 'joe-new-blue-light-logo-07.svg' | asset_url }}"></figure>
+              <div class="display-flex">
+                <hr class="medium-down--hide large--show" />
+                <h2 class="text-center">REQUEST A BOOKING</h2>
+                <hr class="" />
+              </div>
+            </div>
+
+            <div class="grid__item large--four-twelfths noFloat display--inline-block">
+
+              <h3 class="grid__item text-center">CONTACT DETAILS</h3>
+
+              <label for="ContactFormName" class="hidden-label">{{ 'contact.form.name' | t }}</label>
+              <input type="text" id="ContactFormName" class="input-full" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}">
+
+              <label for="ContactFormCountry" class="hidden-label">Country</label>
+              <input type="text" id="ContactFormCountry" class="input-full" name="contact[country]" placeholder="Country" autocapitalize="words" value="{% if form.country %}{{ form.country }}{% elsif customer %}{{ customer.country }}{% endif %}">
+
+              <label for="ContactFormEmail" class="hidden-label">{{ 'contact.form.email' | t }}</label>
+              <input type="email" id="ContactFormEmail" class="input-full" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
+
+              {% assign name_attr = 'contact.form.phone' | t | handle %}
+              <label for="ContactFormPhone" class="hidden-label">{{ 'contact.form.phone' | t }}</label>
+              <input type="tel" id="ContactFormPhone" class="input-full" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.phone' | t }}" pattern="[0-9\-]*" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+            </div>
+
+            <div class="grid__item large--four-twelfths noFloat display--inline-block">
+              <h3 class="grid__item text-center">BOOKING DETAILS</h3>
+
+              <input type="select" name="contact[arrivalDate]" class="datepicker" placeholder="Arrival Date">
+              <input type="select" name="contact[departureDate]" class="datepicker" placeholder="Departure Date">
+
+              <label for="ContactFormMessage" class="hidden-label">{{ 'contact.form.message' | t }}</label>
+              <textarea rows="2" id="ContactFormMessage" class="input-full" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+
+            </div>
+
+            <p class="grid__item">This form is for booking requests only and does not confirm that a booking has been made</p>
+
+            <div class="grid__item text-center">
+              <input type="submit" class="btn no-float margin-center no-padding" value="{{ 'contact.form.send' | t }}">
+            </div>
+
+
+          {% endform %}
+        </div>
+
       </div>
 
       {% comment %}
@@ -159,6 +387,11 @@
 {% endcomment %}
 {{ 'option_selection.js' | shopify_asset_url | script_tag }}
 <script>
+
+  jQuery(function($) {
+    $(".datepicker").datepicker({ minDate: 0 });
+  });
+
   var selectCallback = function(variant, selector) {
     timber.productPage({
       money_format: "{{ shop.money_format }}",

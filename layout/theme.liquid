@@ -34,7 +34,11 @@
   {{ content_for_header }}
   {% include 'oldIE-js' %}
 
-  {{ '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js' | script_tag }}
+  {% comment %}
+  {{ '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js' | script_tag }}
+  {{ '//code.jquery.com/ui/1.11.4/jquery-ui.js' | script_tag }}
+  {% endcomment %}
+
   {{ 'modernizr.min.js' | asset_url | script_tag }}
 
   {% comment %}
@@ -42,6 +46,24 @@
   {% endcomment %}
   {% if template contains 'customers' %}
     {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+  {% endif %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+
+
+
+
+  {% if template == "index" %}
+    {{ 'jquery.flexslider-min.js' | asset_url | script_tag }}
+    {{ 'flexslider.css' | asset_url | stylesheet_tag }}
+    <script>
+      $(window).load(function() {
+        $('.flexslider').flexslider({
+          animation: "fade"
+        });
+      });
+    </script>
   {% endif %}
 
 </head>
@@ -148,150 +170,149 @@
   </div>
   <div id="PageContainer" class="is-moved-by-drawer">
     <header class="site-header" role="banner">
-      <div class="wrapper">
-
-        <div class="grid--full grid--table">
-          <div class="grid__item large--one-half">
-            {% comment %}
-              Use the uploaded logo from theme settings if enabled.
-              Site name gets precedence with H1 tag on homepage, div on other pages.
-            {% endcomment %}
-            {% if template == 'index' %}
-              <h1 class="site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
-            {% else %}
-              <div class="h1 site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
-            {% endif %}
-              {% if settings.logo_use_image %}
-                <a href="/" itemprop="url" class="site-header__logo-link">
-                  <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo">
-                </a>
-              {% else %}
-                <a href="/" itemprop="url">{{ shop.name }}</a>
-              {% endif %}
-            {% if template == 'index' %}
-              </h1>
-            {% else %}
-              </div>
-            {% endif %}
-          </div>
-          <div class="grid__item large--one-half large--text-right medium-down--hide">
-            {% comment %}
-              Show number of items in the cart and total cost in the /cart link
-
-              Ajax Cart Notes:
-                - #cartCount updates the total number of items in the cart
-                - #cartCost updates the total cost of the cart
-                - Documentation:  http://shopify.com/timber#ajax-cart
-            {% endcomment %}
-            <div>
-              <a href="/cart" class="site-header__cart-toggle js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
-                <span class="icon icon-cart" aria-hidden="true"></span>
-                {{ 'layout.cart.title' | t }}
-                (<span id="CartCount">{{ cart.item_count }}</span>
-                {{ 'layout.cart.items_count' | t: count: cart.item_count }}
-                <span id="CartCost">{{ cart.total_price | money }}</span>)
+      <div class="grid--full grid--table">
+        <div class="grid__item large--display-inline-block display-block">
+          {% comment %}
+            Use the uploaded logo from theme settings if enabled.
+            Site name gets precedence with H1 tag on homepage, div on other pages.
+          {% endcomment %}
+          {% if template == 'index' %}
+            <h1 class="site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
+          {% else %}
+            <div class="h1 site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
+          {% endif %}
+            {% if settings.logo_use_image %}
+              <a href="/" itemprop="url" class="site-header__logo-link">
+                <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo">
               </a>
-            </div>
-
-            {% comment %}
-              If customer accounts are enabled, provide login and create account links
-            {% endcomment %}
-            {% if shop.customer_accounts_enabled %}
-              <div>
-                {% if customer %}
-                  {% if customer.first_name != blank %}
-                    {% capture first_name %}<a href="/account">{{ customer.first_name }}</a>{% endcapture %}
-                    {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }}
-                  {% else %}
-                    <a href="/account">{{ 'layout.customer.account' | t }}</a>
-                  {% endif %}
-                  | {{ 'layout.customer.log_out' | t | customer_logout_link }}
-                {% else %}
-                  {{ 'layout.customer.log_in' | t | customer_login_link }}
-                  {% if shop.customer_accounts_optional %}
-                  | {{ 'layout.customer.create_account' | t | customer_register_link }}
-                  {% endif %}
-                {% endif %}
-              </div>
+            {% else %}
+              <a href="/" itemprop="url">{{ shop.name }}</a>
             {% endif %}
-
-            <div class="site-header__search">
-              {% include 'search-bar' %}
+          {% if template == 'index' %}
+            </h1>
+          {% else %}
             </div>
-          </div>
+          {% endif %}
         </div>
 
+        <nav class="nav-bar display-inline-block" role="navigation">
+          <div class="medium-down--hide">
+            {% comment %}
+              List out your main-menu linklist (default)
+
+              More info on linklists:
+                - http://docs.shopify.com/themes/liquid-variables/linklists
+            {% endcomment %}
+            <!-- begin site-nav -->
+            <ul class="site-nav" id="AccessibleNav">
+              {% for link in linklists.main-menu.links %}
+                {% comment %}
+                  Create a dropdown menu by naming a linklist the same as a link in the parent nav
+
+                  More info on dropdowns:
+                    - http://docs.shopify.com/manual/your-website/navigation/create-drop-down-menu
+                {% endcomment %}
+                {% assign child_list_handle = link.title | handleize %}
+                {% if linklists[child_list_handle].links != blank %}
+                  <li class="site-nav--has-dropdown{% if link.active %} site-nav--active{% endif %}" aria-haspopup="true">
+                    <a href="{{ link.url }}" class="site-nav__link">
+                      {{ link.title }}
+                      <span class="icon icon-arrow-down" aria-hidden="true"></span>
+                    </a>
+                    <ul class="site-nav__dropdown">
+                      {% for childlink in linklists[child_list_handle].links %}
+                        <li{% if childlink.active %} class="site-nav--active"{% endif %}>
+                          <a href="{{ childlink.url }}" class="site-nav__link">{{ childlink.title | escape }}</a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                {% else %}
+                  <li {% if link.active %}class="site-nav--active"{% endif %}>
+                    <a href="{{ link.url }}" class="site-nav__link">{{ link.title }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+            <!-- //site-nav -->
+          </div>
+          <div class="large--hide medium-down--show">
+            <div class="grid">
+              <div class="grid__item one-half">
+                <div class="site-nav--mobile">
+                  <button type="button" class="icon-fallback-text site-nav__link js-drawer-open-left" aria-controls="NavDrawer" aria-expanded="false">
+                    <span class="icon icon-hamburger" aria-hidden="true"></span>
+                    <span class="fallback-text">{{ 'layout.navigation.menu' | t }}</span>
+                  </button>
+                </div>
+              </div>
+              {% comment %}
+              <div class="grid__item one-half text-right">
+                <div class="site-nav--mobile">
+                  <a href="/cart" class="js-drawer-open-right site-nav__link" aria-controls="CartDrawer" aria-expanded="false">
+                    <span class="icon-fallback-text">
+                      <span class="icon icon-cart" aria-hidden="true"></span>
+                      <span class="fallback-text">{{ 'layout.cart.title' | t }}</span>
+                    </span>
+                  </a>
+                </div>
+              </div>
+              {% endcomment %}
+
+            </div>
+          </div>
+        </nav>
+
+        <div class="grid__item medium-down--hide hidden">
+          {% comment %}
+            Show number of items in the cart and total cost in the /cart link
+
+            Ajax Cart Notes:
+              - #cartCount updates the total number of items in the cart
+              - #cartCost updates the total cost of the cart
+              - Documentation:  http://shopify.com/timber#ajax-cart
+          <div>
+            <a href="/cart" class="site-header__cart-toggle js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
+              <span class="icon icon-cart" aria-hidden="true"></span>
+              {{ 'layout.cart.title' | t }}
+              (<span id="CartCount">{{ cart.item_count }}</span>
+              {{ 'layout.cart.items_count' | t: count: cart.item_count }}
+              <span id="CartCost">{{ cart.total_price | money }}</span>)
+            </a>
+          </div>
+          {% endcomment %}
+
+          {% comment %}
+            If customer accounts are enabled, provide login and create account links
+          {% endcomment %}
+          {% if shop.customer_accounts_enabled %}
+            <div>
+              {% if customer %}
+                {% if customer.first_name != blank %}
+                  {% capture first_name %}<a href="/account">{{ customer.first_name }}</a>{% endcapture %}
+                  {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }}
+                {% else %}
+                  <a href="/account">{{ 'layout.customer.account' | t }}</a>
+                {% endif %}
+                | {{ 'layout.customer.log_out' | t | customer_logout_link }}
+              {% else %}
+                {{ 'layout.customer.log_in' | t | customer_login_link }}
+                {% if shop.customer_accounts_optional %}
+                | {{ 'layout.customer.create_account' | t | customer_register_link }}
+                {% endif %}
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <!-- BLUE LIGHT NEEDS NO SEARCH - WALLAROO MEDIA 03/08/16 <div class="site-header__search">
+            { include 'search-bar' }
+          </div> -->
+        </div>
       </div>
+
     </header>
 
-    <nav class="nav-bar" role="navigation">
-      <div class="wrapper">
-        <div class="medium-down--hide">
-          {% comment %}
-            List out your main-menu linklist (default)
-
-            More info on linklists:
-              - http://docs.shopify.com/themes/liquid-variables/linklists
-          {% endcomment %}
-          <!-- begin site-nav -->
-          <ul class="site-nav" id="AccessibleNav">
-            {% for link in linklists.main-menu.links %}
-              {% comment %}
-                Create a dropdown menu by naming a linklist the same as a link in the parent nav
-
-                More info on dropdowns:
-                  - http://docs.shopify.com/manual/your-website/navigation/create-drop-down-menu
-              {% endcomment %}
-              {% assign child_list_handle = link.title | handleize %}
-              {% if linklists[child_list_handle].links != blank %}
-                <li class="site-nav--has-dropdown{% if link.active %} site-nav--active{% endif %}" aria-haspopup="true">
-                  <a href="{{ link.url }}" class="site-nav__link">
-                    {{ link.title }}
-                    <span class="icon icon-arrow-down" aria-hidden="true"></span>
-                  </a>
-                  <ul class="site-nav__dropdown">
-                    {% for childlink in linklists[child_list_handle].links %}
-                      <li{% if childlink.active %} class="site-nav--active"{% endif %}>
-                        <a href="{{ childlink.url }}" class="site-nav__link">{{ childlink.title | escape }}</a>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                </li>
-              {% else %}
-                <li {% if link.active %}class="site-nav--active"{% endif %}>
-                  <a href="{{ link.url }}" class="site-nav__link">{{ link.title }}</a>
-                </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-          <!-- //site-nav -->
-        </div>
-        <div class="large--hide medium-down--show">
-          <div class="grid">
-            <div class="grid__item one-half">
-              <div class="site-nav--mobile">
-                <button type="button" class="icon-fallback-text site-nav__link js-drawer-open-left" aria-controls="NavDrawer" aria-expanded="false">
-                  <span class="icon icon-hamburger" aria-hidden="true"></span>
-                  <span class="fallback-text">{{ 'layout.navigation.menu' | t }}</span>
-                </button>
-              </div>
-            </div>
-            <div class="grid__item one-half text-right">
-              <div class="site-nav--mobile">
-                <a href="/cart" class="js-drawer-open-right site-nav__link" aria-controls="CartDrawer" aria-expanded="false">
-                  <span class="icon-fallback-text">
-                    <span class="icon icon-cart" aria-hidden="true"></span>
-                    <span class="fallback-text">{{ 'layout.cart.title' | t }}</span>
-                  </span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <main class="wrapper main-content" role="main">
+    <main class="main-content" role="main">
 
       {{ content_for_layout }}
 
@@ -301,31 +322,66 @@
     <footer class="site-footer small--text-center" role="contentinfo">
       <div class="wrapper">
         <div class="grid">
+          <div class="grid__item large--one-third medium--one-half grid">
+            <ul>
+              {% for link in linklists.main-menu.links %}
+                    <li class="grid__item one-half"><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
           {% if settings.footer_social_enable %}
-            <div class="grid__item large--one-third medium--one-half">
-              <h3>{{ 'layout.footer.social_title' | t }}</h3>
-                <ul class="inline-list social-icons">
-                  {% if settings.social_twitter_link != blank %}
-                    <li>
-                      <a class="icon-fallback-text" href="{{ settings.social_twitter_link }}" title="{{ shop.name }} on Twitter">
-                        <span class="icon icon-twitter" aria-hidden="true"></span>
-                        <span class="fallback-text">Twitter</span>
-                      </a>
-                    </li>
-                  {% endif %}
-                  {% if settings.social_facebook_link != blank %}
-                    <li>
-                      <a class="icon-fallback-text" href="{{ settings.social_facebook_link }}" title="{{ shop.name }} on Facebook">
-                        <span class="icon icon-facebook" aria-hidden="true"></span>
-                        <span class="fallback-text">Facebook</span>
-                      </a>
-                    </li>
-                  {% endif %}
+            <div class="grid__item large--one-third medium--one-third">
+                <ul class="inline-list social-icons text-center">
+                {% if settings.social_facebook_link != nil %}
+                  <li class="one-third">
+                    <a class="icon-fallback-text" href="{{ settings.social_facebook_link }}" title="{{ shop.name }} on Facebook">
+                      <figure aria-hidden="true"><img src="{{ 'square-facebook.svg' | asset_url }}"></figure>
+                      <span class="fallback-text">Facebook</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if settings.social_trip_advisor_link != nil %}
+                  <li class="one-third">
+                    <a class="icon-fallback-text" href="{{ settings.social_trip_advisor_link }}" title="{{ shop.name }} on Trip Advisor">
+                      <figure aria-hidden="true"><img src="{{ 'square-tripadvisor.svg' | asset_url }}"></figure>
+                      <span class="fallback-text">Trip Advisor</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if settings.social_instagram_link != nil %}
+                  <li class="one-third">
+                    <a class="icon-fallback-text" href="{{ settings.social_instagram_link }}" title="{{ shop.name }} on Instagram">
+                      <figure aria-hidden="true"><img src="{{ 'square-instagram.svg' | asset_url }}"></figure>
+                      <span class="fallback-text">Instagram</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if settings.social_google_link != nil %}
+                  <li class="one-third">
+                    <a class="icon-fallback-text" href="{{ settings.social_google_link }}" title="{{ shop.name }} on Google +">
+                      <figure aria-hidden="true"><img src="{{ 'square-googleplus.svg' | asset_url }}"></figure>
+                      <span class="fallback-text">Google +</span>
+                    </a>
+                  </li>
+                {% endif %}
                 </ul>
             </div>
           {% endif %}
-          {% if settings.footer_newsletter_enable %}
-            <div class="grid__item large--one-third push--large--one-third medium--one-half">
+          {% comment %}
+            BEGIN CONTACT INFO
+          {% endcomment %}
+          <div class="grid__item large--one-third medium--one-half">
+
+            <ul class="contactInfo">
+              <li>CONTACT:</li>
+              <li>{{ settings.contact_name }}</li>
+              <li>{{ settings.contact_number }}</li>
+              <li>{{ settings.contact_email }}</li>
+            </ul>
+
+          </div>
+
+
               {% comment %}
                 MailChimp is the go-to newsletter service for Shopify.
                 Use the link below to find your MailChimp form action
@@ -334,20 +390,8 @@
                 MailChimp newsletter integration and requirement:
                  - http://docs.shopify.com/support/configuration/store-customization/where-do-i-get-my-mailchimp-form-action
               {% endcomment %}
-              <h3>{{ 'layout.footer.newsletter_title' | t }}</h3>
-              {% if settings.newsletter_form_action != blank %}
-                {% assign form_action = settings.newsletter_form_action %}
-              {% else %}
-                {% assign form_action = '#' %}
-              {% endif %}
-              <form action="{{ form_action }}" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" class="input-group">
-                <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="EMAIL" id="mail" class="input-group-field" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off">
-                <span class="input-group-btn">
-                  <input type="submit" class="btn" name="subscribe" id="subscribe" value="{{ 'general.newsletter_form.submit' | t }}">
-                </span>
-              </form>
-            </div>
-          {% endif %}
+
+
           <div class="grid__item text-center">
             <hr>
             {% comment %}
@@ -366,9 +410,9 @@
                 {% endfor %}
               </ul>
             {% endunless %}
-            <a href="http://shopify.com/timber">Timber Theme Framework</a> by <a href="http://www.shopify.com?ref=Timber" title="Shopify.com">Shopify</a><br>
-            <small>{{ powered_by_link }}</small>
+            <p>&copy; COPYRIGHT 2015 BLUE LIGHT RESORT</p>
           </div>
+
         </div>
       </div>
     </footer>
