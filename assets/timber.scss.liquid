@@ -3094,3 +3094,195 @@ form .grid__item {
     padding-top:65px;
   }
 }
+
+/*================ Activities Page ================*/
+.activities-header {
+  text-align: center;
+  width: 75%;
+  margin: 0 auto;
+}
+
+.activities-header hr {
+  margin: 0 auto 24px;
+  width: 20%;
+}
+
+.activities-nav {
+  text-align: center;
+}
+
+.winter-nav,
+.summer-nav,
+.anytime-nav {
+  cursor: pointer;
+}
+
+.winter-nav h2,
+.summer-nav h2,
+.anytime-nav h2 {
+  color: #9e9e9e;
+  padding-bottom: 16px;
+  padding-top: 80px;
+}
+
+.winter-nav hr,
+.summer-nav hr,
+.anytime-nav hr {
+  border-color: transparent;
+}
+
+.nav-active h2,
+.nav-active-hover h2{
+  color: #000000;
+}
+
+.nav-active hr,
+.nav-active-hover hr{
+  margin: 0 auto 24px;
+  width: 20%;
+  border-color: #c39a1e;
+}
+
+.activities-sub-heading {
+  color: #9e9e9e;
+  font-style: italic;
+  margin: 40px 0 24px;
+  text-align: center;
+}
+
+.flex-grid {
+  display: flex;
+  flex-direction: column;
+}
+@include at-query($min, $preMedium) {
+  .flex-grid {
+    flex-direction: row;
+  }
+  .flex-grid__item {
+    flex: 0 0 50%;
+  }
+}
+
+.activity-content {
+  text-align: center;
+  background-color: #fbfbf9;
+  padding: 80px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  order: 1;
+}
+@include at-query($min, $preMedium) {
+  .activity-content {
+    padding: 0 50px;
+    order: initial;
+  }
+}
+
+.activity-img {
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 0;
+  padding-bottom: 100%;
+}
+@include at-query($min, $preMedium) {
+  .activity-img {
+    padding-bottom: 50%;
+  }
+}
+
+.activity-content h2 {
+  padding-bottom: 16px;
+  padding-top: 0;
+}
+
+.activity-content hr {
+  margin: 0 auto 16px;
+  width: 30%;
+}
+
+.activity-cta-button a {
+  color: #c39a1e;
+}
+
+.back-to-top {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.back-to-top a {
+  color: #9e9e9e;
+  font-style: italic; 
+}
+
+.summer-activities, .winter-activities {
+  display: none;
+}
+
+// POP UP ACTIVITIES
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 300px auto 70px;
+  padding: 50px;
+  background: #fbfbf9;
+  width: 40%;
+	min-width: 300px;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+	padding-top: 0;
+  color: #333;
+  text-align: center;
+}
+.popup .close {
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  transition: all 200ms;
+  font-size: 30px;
+  text-decoration: none;
+  color: #c39a1e;
+}
+.popup .close:hover {
+  color: orange;
+}
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+
+.popup .content hr {
+  border-color: #c39a1e;
+}
+
+.popup-left {
+  text-align: left;
+}
+
+.popup-right {
+  text-align: right;
+}
+
+.popup .content .bolded-text {
+  color: #c39a1e;
+  font-weight: 600;
+}
