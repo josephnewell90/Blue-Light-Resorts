@@ -750,7 +750,8 @@ figure {
 
 .main-content {
   display: block;
-  margin-top: $gutter;
+  margin: $gutter auto 0;
+  max-width: 1920px;
   padding-bottom: $gutter * 2;
 }
 
@@ -916,8 +917,6 @@ p {
   padding-top:10px;
   padding-bottom:10px;
   letter-spacing: .17em;
-  font-weight: 700;
-
 
   img {
     margin: 0;
@@ -3131,16 +3130,18 @@ form .grid__item {
   border-color: transparent;
 }
 
-.nav-active h2,
-.nav-active-hover h2{
-  color: #000000;
-}
-
-.nav-active hr,
-.nav-active-hover hr{
-  margin: 0 auto 24px;
-  width: 20%;
-  border-color: #c39a1e;
+.nav-active,
+.winter-nav:not(.nav-active):hover,
+.summer-nav:not(.nav-active):hover,
+.anytime-nav:not(.nav-active):hover {
+  h2 {
+    color: #000000;
+  }
+  hr {
+    margin: 0 auto 24px;
+    width: 20%;
+    border-color: #c39a1e;
+  }
 }
 
 .activities-sub-heading {
@@ -3154,7 +3155,7 @@ form .grid__item {
   display: flex;
   flex-direction: column;
 }
-@include at-query($min, $preMedium) {
+@include at-query($min, $medium) {
   .flex-grid {
     flex-direction: row;
   }
@@ -3173,7 +3174,7 @@ form .grid__item {
   align-items: center;
   order: 1;
 }
-@include at-query($min, $preMedium) {
+@include at-query($min, $medium) {
   .activity-content {
     padding: 0 50px;
     order: initial;
@@ -3186,7 +3187,7 @@ form .grid__item {
   height: 0;
   padding-bottom: 100%;
 }
-@include at-query($min, $preMedium) {
+@include at-query($min, $medium) {
   .activity-img {
     padding-bottom: 50%;
   }
@@ -3214,7 +3215,7 @@ form .grid__item {
 .back-to-top a {
   color: #9e9e9e;
   font-style: italic;
-	
+
 	&::before {
   	content: url({{ "small-arrow-up.svg" | asset_url }});
     display: block;
@@ -3292,4 +3293,109 @@ form .grid__item {
 .popup .content .bolded-text {
   color: #c39a1e;
   font-weight: 600;
+}
+
+/*================ Concierge Page ================*/
+.concierge-header {
+  text-align: center;
+  width: 75%;
+  margin: 0 auto;
+}
+
+.concierge-header hr {
+  margin: 0 auto 24px;
+  width: 20%;
+}
+
+.services-grid > h2,
+.recommendations-grid > h2 {
+  text-align: center;
+  padding-bottom: 24px;
+}
+.services-grid > h2 {
+  padding-top: 80px
+}
+.recommendations-grid > h2 {
+  padding-top: 24px;
+}
+
+.airport-nav, .grocery-nav, .babysitting-nav,
+.dining-nav, .spa-nav, .ski-nav {
+  cursor: pointer;
+
+  &.nav-active {
+    figcaption {
+      background-color: rgba(195,154,30,0.9);
+    }
+  }
+}
+
+.airport-content, .grocery-content,
+.dining-content, .spa-content {
+  display: none;
+}
+
+.airport-content, .grocery-content, .babysitting-content,
+.dining-content, .spa-content, .ski-content {
+  background-color: #fbfbf9;
+  padding: 15px 0;
+}
+@include at-query($min, $postSmall) {
+  .airport-content, .grocery-content, .babysitting-content,
+  .dining-content, .spa-content, .ski-content {
+    padding: 80px 0;
+  }
+}
+
+.service-content {
+  margin: 0 auto;
+  text-align: center;
+  width: 75%;
+}
+.recommendation-content {
+  margin: 0 auto;
+  width: 75%;
+
+  h3 {
+    font-weight: bold;
+    padding-bottom: 12px;
+  }
+  hr {
+    margin-top: 0;
+  }
+}
+
+@include at-query($min, $postSmall) {
+  .services-grid,
+  .recommendations-grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .airport-content, .grocery-content, .babysitting-content,
+  .dining-content, .spa-content, .ski-content {
+    order: 1;
+  }
+}
+
+.service-img,
+.recommendation-img {
+  color: #fff;
+  position: relative;
+
+  img {
+    display: block;
+    width: 100%;
+  }
+
+  figcaption {
+    align-items: center;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 100%;
+  }
 }
