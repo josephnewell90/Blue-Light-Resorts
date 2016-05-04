@@ -132,7 +132,7 @@ $(document).ready(function() {
   {% endcomment %}
   {% assign current_variant = product.selected_or_first_available_variant %}
 
-    <div class="grid product-single">
+    <div class="grid--full product-single">
     <div class="grid__item text-center">
       <div class="product-single__photos" id="ProductPhoto">
         {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
@@ -159,16 +159,14 @@ $(document).ready(function() {
       {% endif %}
     </div>
 
-    <div class="grid__item text-center colorBackground">
+    <div class="grid__item text-center product-content">
+      <div class="wrapper main-text">
+        <h1 itemprop="name">{{ product.title }}</h1>
+        <hr class="one-sixth">
 
-      <h1 itemprop="name">{{ product.title }}</h1>
-
-      <hr class="one-sixth">
-
-
-
-      <div class="product-description rte large--one-half no-float" itemprop="description">
-        {{ product.description }}
+        <div class="product-description rte" itemprop="description">
+          {{ product.description }}
+        </div>
       </div>
 
       <div class="tabs">
@@ -203,169 +201,164 @@ $(document).ready(function() {
             </li>
           {% endif %}
 
-          <div id="tabContent" class="large--five-twelfths">
+          <div id="tabContent" class="wrapper main-text">
           </div>
 
         </ul>
       </div>
+    </div>
 
+    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+      {% comment %}
 
-      <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+      WE NEED TO REPLACE THE BELOW FORM WITH A CONTACT FORM
 
-
-
+      {% endcomment %}
+      {% comment %}
+        ID addToCartForm is a selector for the ajax cart plugin
+      <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm" class="grid form-vertical overflow-hidden">
 
         {% comment %}
+          Add product variants as a dropdown.
+            - By default, each variant (or combination of variants) will display as its own <option>
+            - To separate these into multiple steps, which we suggest, use option_selection.js (see below)
 
-        WE NEED TO REPLACE THE BELOW FORM WITH A CONTACT FORM
+          You can leverage jQuery to add a callback on page load and each time the select element changes:
+            - Include option_selection.js (as seen at the bottom of this file)
+            - This allows you to use JavaScript anytime the variant dropdown changes
+            - This also separates out your variant options (ie. size, color, etc.) to separate select elements
 
+          For more information on products with multiple options, visit:
+            - http://docs.shopify.com/support/your-website/themes/can-i-make-my-theme-use-products-with-multiple-options#update-product-liquid
         {% endcomment %}
-        {% comment %}
-          ID addToCartForm is a selector for the ajax cart plugin
-        <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm" class="grid form-vertical overflow-hidden">
+        <select name="id" id="productSelect" class="product-single__variants">
+          {% for variant in product.variants %}
+            {% if variant.available %}
+
+              {% comment %}
+                Note: if you use option_selection.js, your <select> tag will be overwritten, meaning what you have inside <option> will not reflect what you coded below.
+              {% endcomment %}
+              <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+
+            {% else %}
+              <option disabled="disabled">
+                {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+              </option>
+            {% endif %}
+          {% endfor %}
+        </select>
+
+        <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+        <span id="ProductPrice" class="h2" itemprop="price">
+          {{ current_variant.price | money }}
+        </span>
+
+        {% if product.compare_at_price_max > product.price %}
+          <span class="visually-hidden">{{ 'products.general.sale_price' | t }}</span>
+          <p id="ComparePrice">
+            {{ 'products.product.compare_at' | t }} {{ current_variant.compare_at_price | money }}
+          </p>
+        {% endif %}
+
+        <label for="Quantity" class="quantity-selector">{{ 'products.product.quantity' | t }}</label>
+        <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector">
+
+        <button type="submit" name="add" id="AddToCart" class="btn">
+          <span id="AddToCartText">{{ 'products.product.add_to_cart' | t }}</span>
+        </button>
+      </form>
+      {% endcomment %}
+      {% comment %}
+        END ADD TO CART FORM
+      {% endcomment %}
+
+      <div class="form-vertical text-center contact-form">
+        {% form 'contact', class: 'grid' %}
 
           {% comment %}
-            Add product variants as a dropdown.
-              - By default, each variant (or combination of variants) will display as its own <option>
-              - To separate these into multiple steps, which we suggest, use option_selection.js (see below)
-
-            You can leverage jQuery to add a callback on page load and each time the select element changes:
-              - Include option_selection.js (as seen at the bottom of this file)
-              - This allows you to use JavaScript anytime the variant dropdown changes
-              - This also separates out your variant options (ie. size, color, etc.) to separate select elements
-
-            For more information on products with multiple options, visit:
-              - http://docs.shopify.com/support/your-website/themes/can-i-make-my-theme-use-products-with-multiple-options#update-product-liquid
+            Successful message
           {% endcomment %}
-          <select name="id" id="productSelect" class="product-single__variants">
-            {% for variant in product.variants %}
-              {% if variant.available %}
-
-                {% comment %}
-                  Note: if you use option_selection.js, your <select> tag will be overwritten, meaning what you have inside <option> will not reflect what you coded below.
-                {% endcomment %}
-                <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
-
-              {% else %}
-                <option disabled="disabled">
-                  {{ variant.title }} - {{ 'products.product.sold_out' | t }}
-                </option>
-              {% endif %}
-            {% endfor %}
-          </select>
-
-          <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
-          <span id="ProductPrice" class="h2" itemprop="price">
-            {{ current_variant.price | money }}
-          </span>
-
-          {% if product.compare_at_price_max > product.price %}
-            <span class="visually-hidden">{{ 'products.general.sale_price' | t }}</span>
-            <p id="ComparePrice">
-              {{ 'products.product.compare_at' | t }} {{ current_variant.compare_at_price | money }}
+          {% if form.posted_successfully? %}
+            <p class="note form-success">
+              {{ 'contact.form.post_success' | t }}
             </p>
           {% endif %}
 
-          <label for="Quantity" class="quantity-selector">{{ 'products.product.quantity' | t }}</label>
-          <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector">
+          {{ form.errors | default_errors }}
 
-          <button type="submit" name="add" id="AddToCart" class="btn">
-            <span id="AddToCartText">{{ 'products.product.add_to_cart' | t }}</span>
-          </button>
-        </form>
-        {% endcomment %}
-        {% comment %}
-          END ADD TO CART FORM
-        {% endcomment %}
+          {% assign name_attr = 'contact.form.name' | t | handle %}
 
-        <div class="form-vertical text-center ten-twelfths grid">
-          {% form 'contact', class: 'grid' %}
-
-            {% comment %}
-              Successful message
-            {% endcomment %}
-            {% if form.posted_successfully? %}
-              <p class="note form-success">
-                {{ 'contact.form.post_success' | t }}
-              </p>
-            {% endif %}
-
-            {{ form.errors | default_errors }}
-
-            {% assign name_attr = 'contact.form.name' | t | handle %}
-
-            <div class="grid__item large--ten-twelfths text-center noFloat">
-              <figure><img class="large--one-twelfth" src="{{ 'joe-new-blue-light-logo-07.svg' | asset_url }}"></figure>
-              <div class="display-flex">
-                <hr class="medium-down--hide large--show" />
-                <h2 class="text-center">REQUEST A BOOKING</h2>
-                <hr class="" />
-              </div>
+          <div class="grid__item large--ten-twelfths text-center noFloat">
+            <figure><img class="large--one-twelfth" src="{{ 'joe-new-blue-light-logo-07.svg' | asset_url }}"></figure>
+            <div class="display-flex">
+              <hr class="medium-down--hide large--show" />
+              <h2 class="text-center">REQUEST A BOOKING</h2>
+              <hr class="" />
             </div>
+          </div>
 
-            <div class="grid__item large--four-twelfths noFloat display--inline-block">
+          <div class="grid__item large--four-twelfths noFloat display--inline-block">
 
-              <h3 class="grid__item text-center">CONTACT DETAILS</h3>
+            <h3 class="grid__item text-center">CONTACT DETAILS</h3>
 
-              <label for="ContactFormName" class="hidden-label">{{ 'contact.form.name' | t }}</label>
-              <input type="text" id="ContactFormName" class="input-full" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}">
+            <label for="ContactFormName" class="hidden-label">{{ 'contact.form.name' | t }}</label>
+            <input type="text" id="ContactFormName" class="input-full" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}">
 
-              <label for="ContactFormCountry" class="hidden-label">Country</label>
-              <input type="text" id="ContactFormCountry" class="input-full" name="contact[country]" placeholder="Country" autocapitalize="words" value="{% if form.country %}{{ form.country }}{% elsif customer %}{{ customer.country }}{% endif %}">
+            <label for="ContactFormCountry" class="hidden-label">Country</label>
+            <input type="text" id="ContactFormCountry" class="input-full" name="contact[country]" placeholder="Country" autocapitalize="words" value="{% if form.country %}{{ form.country }}{% elsif customer %}{{ customer.country }}{% endif %}">
 
-              <label for="ContactFormEmail" class="hidden-label">{{ 'contact.form.email' | t }}</label>
-              <input type="email" id="ContactFormEmail" class="input-full" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
+            <label for="ContactFormEmail" class="hidden-label">{{ 'contact.form.email' | t }}</label>
+            <input type="email" id="ContactFormEmail" class="input-full" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
 
-              {% assign name_attr = 'contact.form.phone' | t | handle %}
-              <label for="ContactFormPhone" class="hidden-label">{{ 'contact.form.phone' | t }}</label>
-              <input type="tel" id="ContactFormPhone" class="input-full" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.phone' | t }}" pattern="[0-9\-]*" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.phone }}{% endif %}">
-            </div>
+            {% assign name_attr = 'contact.form.phone' | t | handle %}
+            <label for="ContactFormPhone" class="hidden-label">{{ 'contact.form.phone' | t }}</label>
+            <input type="tel" id="ContactFormPhone" class="input-full" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.phone' | t }}" pattern="[0-9\-]*" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+          </div>
 
-            <div class="grid__item large--four-twelfths noFloat display--inline-block">
-              <h3 class="grid__item text-center">BOOKING DETAILS</h3>
+          <div class="grid__item large--four-twelfths noFloat display--inline-block">
+            <h3 class="grid__item text-center">BOOKING DETAILS</h3>
 
-              <input type="select" name="contact[arrivalDate]" class="datepicker" placeholder="Arrival Date">
-              <input type="select" name="contact[departureDate]" class="datepicker" placeholder="Departure Date">
+            <input type="select" name="contact[arrivalDate]" class="datepicker" placeholder="Arrival Date">
+            <input type="select" name="contact[departureDate]" class="datepicker" placeholder="Departure Date">
 
-              <label for="ContactFormMessage" class="hidden-label">{{ 'contact.form.message' | t }}</label>
-              <textarea rows="2" id="ContactFormMessage" class="input-full" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+            <label for="ContactFormMessage" class="hidden-label">{{ 'contact.form.message' | t }}</label>
+            <textarea rows="2" id="ContactFormMessage" class="input-full" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}">{% if form.body %}{{ form.body }}{% endif %}</textarea>
 
-            </div>
+          </div>
 
-            <p class="grid__item">This form is for booking requests only and does not confirm that a booking has been made</p>
+          <p class="grid__item">This form is for booking requests only and does not confirm that a booking has been made</p>
 
-            <div class="grid__item text-center">
-              <input type="submit" class="btn no-float margin-center no-padding" value="{{ 'contact.form.send' | t }}">
-            </div>
+          <div class="grid__item text-center">
+            <input type="submit" class="btn no-float margin-center no-padding" value="{{ 'contact.form.send' | t }}">
+          </div>
 
 
-          {% endform %}
-        </div>
-
+        {% endform %}
       </div>
 
-      {% comment %}
-        If the user is on a collection product page (ie with /collections/collection-handle/products/product-handle)
-        in the URL, we can show next/previous links to other products in the collection.
-      {% endcomment %}
-      {% if collection %}
-        {% if collection.previous_product or collection.next_product %}
-          <p>
-            {% if collection.previous_product %}
-              <span class="left">
-                {{ 'products.general.previous_product_html' | t | link_to: collection.previous_product }}
-              </span>
-            {% endif %}
-            {% if collection.next_product %}
-              <span class="right">
-                {{ 'products.general.next_product_html' | t | link_to: collection.next_product }}
-              </span>
-            {% endif %}
-          </p>
-        {% endif %}
-      {% endif %}
-
     </div>
+
+    {% comment %}
+      If the user is on a collection product page (ie with /collections/collection-handle/products/product-handle)
+      in the URL, we can show next/previous links to other products in the collection.
+    {% endcomment %}
+    {% if collection %}
+      {% if collection.previous_product or collection.next_product %}
+        <p>
+          {% if collection.previous_product %}
+            <span class="left">
+              {{ 'products.general.previous_product_html' | t | link_to: collection.previous_product }}
+            </span>
+          {% endif %}
+          {% if collection.next_product %}
+            <span class="right">
+              {{ 'products.general.next_product_html' | t | link_to: collection.next_product }}
+            </span>
+          {% endif %}
+        </p>
+      {% endif %}
+    {% endif %}
+
   </div>
 
 </div>
