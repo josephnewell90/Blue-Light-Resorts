@@ -759,6 +759,11 @@ figure {
   width: 70%;
 }
 
+.header hr {
+  margin: 0 auto 24px;
+  width: 20%;
+}
+
 /*============================================================================
   #Helper Classes
 ==============================================================================*/
@@ -865,6 +870,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 0 0 0;
   line-height: 1.4;
   letter-spacing: .21em;
+  text-transform: uppercase;
 
   a {
     text-decoration: none;
@@ -882,9 +888,9 @@ h1 {
 
 h2 {
   font-size: em(28px);
+  padding-bottom: 24px;
   @include at-query ($min, $small) {
-    padding-top: 150px;
-    padding-bottom: 24px;
+    padding-top: 65px;
   }
 }
 
@@ -1000,7 +1006,8 @@ hr {
   clear: both;
   border-top: solid #C39A1E;
   border-width: 1px 0 0;
-  // margin: $gutter 0;
+  margin: 0 auto 24px;
+  width: 20%;
   height: 0;
 
   &.hr--small {
@@ -1163,7 +1170,7 @@ html input[disabled] {
 .btn,
 .rte .btn {
   display: inline-block;
-  padding: 8px 10px;
+  padding: 1em 3em;
   width: auto;
   margin: 0 0 30px 0;
   line-height: 1.42;
@@ -1990,16 +1997,18 @@ label.error {
   z-index: 3;
 
   @include at-query ($min, $large){
-    padding: ($gutter / 2) 0;
-    background-color: rgba(0,0,0,.5);
+    padding: $gutter 0;
     color: white;
-  }
-
-  .grid--table {
-    display: table;
-    table-layout: fixed;
+    display: flex;
     width: 100%;
 
+    .template-index & {
+      background-color: rgba(0,0,0,.5);
+      position: absolute;
+    }
+  }
+
+  &.grid--table {
      .grid__item {
       float: none;
       display: inline-block;
@@ -2010,9 +2019,15 @@ label.error {
 }
 
 .site-header nav.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include at-query ($max, $preLarge) {
     position: absolute;
     top: 0;
     right: 0;
+  }
 }
 
 .grid__item.large--display-inline-block.display-block {
@@ -2025,7 +2040,9 @@ header div.grid__item h1 a img {
 
 @include at-query($min, $medium) {
   .site-header__logo-container {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    margin-right: auto;
   }
 }
 
@@ -2120,10 +2137,12 @@ header div.grid__item h1 a img {
 .site-nav__link {
   display: block;
   text-decoration: none;
-  padding: $gutter;
+  padding: 10px $gutter;
   white-space: nowrap;
-  color: #C39A1E;
-  font-size: 1.5em;
+  color: #fff;
+  font-size: 1em;
+  letter-spacing: 0.1em;
+  transition: color 250ms;
 
   &:hover,
   &:active {
@@ -2141,7 +2160,6 @@ header div.grid__item h1 a img {
   }
 
   .site-nav--active > & {
-    font-weight: bold;
     color: $colorPrimary;
   }
 
@@ -2198,7 +2216,7 @@ header div.grid__item h1 a img {
   margin: (-$gutter / 2) (-$gutter / 2) 0 (-$gutter / 2);
 
   li {
-    margin-bottom: 0;
+    margin: 0;
   }
 }
 
@@ -2433,6 +2451,7 @@ header div.grid__item h1 a img {
   height: 100%;
   padding: 0 20px;
   color: inherit;
+  margin-bottom: 0 !important;
 
   &:active,
   &:focus {
@@ -2506,12 +2525,14 @@ header div.grid__item h1 a img {
 .homeSplash figure {
   width: inherit;
   position: relative;
+  max-height: 100vh;
+  overflow: hidden;
 }
 .homeSplash figcaption {
     position: absolute;
     bottom: 5em;
     right: .5em;
-    padding: 2em 10em;
+    padding: 2em 5em;
     background-color: rgba(0,0,0,.5);
     color: white;
     letter-spacing: .21em;
@@ -2529,7 +2550,13 @@ header div.grid__item h1 a img {
 }
 
 #home-header {
-  margin-bottom: 6em;
+  h3 {
+    padding-top: 65px;
+    font-size: 1.42857em;
+  }
+  h2 {
+    padding-top: 0;
+  }
 }
 #home-concierge-header {
   margin-bottom: 5em;
@@ -2543,6 +2570,9 @@ header div.grid__item h1 a img {
 /* Cabin tiles */
 .template-index .grid__item.large--five-twelfths.no-padding.text-center p {
     padding: 25px 20% 10px;
+}
+.cabin-title {
+  text-transform: uppercase;
 }
 
 /*============================================================================
@@ -2642,8 +2672,6 @@ form input[type="submit"] {
 }
 
 #contact_form hr {
-  margin: 0 auto;
-  float: none;
   width: 100%;
   border-color: #35353D;
 }
@@ -3125,26 +3153,16 @@ form .grid__item {
   }
 }
 
+/*================ About Page ================*/
+.lodge-img {
+  margin-top: 3em;
+
+  ~ h3 {
+    margin-top: 0;
+  }
+}
+
 /*================ Activities Page ================*/
-.activities-header {
-  text-align: center;
-  width: 70%;
-  margin: 0 auto;
-  max-width: 960px;
-}
-
-.activities-header hr {
-  margin: 0 auto 24px;
-  width: 20%;
-}
-
-.activities-nav {
-  text-align: center;
-  width: 70%;
-  margin: 0 auto;
-  max-width: 960px;
-}
-
 .winter-nav,
 .summer-nav,
 .anytime-nav {
@@ -3159,7 +3177,6 @@ form .grid__item {
 
   hr {
     border-color: transparent;
-    width: 20%;
   }
 
   &.nav-active,
@@ -3169,7 +3186,6 @@ form .grid__item {
     }
 
     hr {
-      margin-top: 0;
       border-color: #c39a1e
     }
   }
@@ -3233,7 +3249,7 @@ form .grid__item {
 }
 
 .activity-content hr {
-  margin: 0 auto 16px;
+  margin-bottom: 16px;
   width: 30%;
 }
 
@@ -3300,6 +3316,10 @@ form .grid__item {
   padding-bottom: 6px;
 }
 
+.popup hr {
+  width: 100%;
+}
+
 .popup .close {
   position: absolute;
   top: 0px;
@@ -3339,18 +3359,6 @@ form .grid__item {
 }
 
 /*================ Concierge Page ================*/
-.concierge-header {
-  max-width: 960px;
-  text-align: center;
-  width: 70%;
-  margin: 0 auto;
-}
-
-.concierge-header hr {
-  margin: 0 auto 24px;
-  width: 20%;
-}
-
 .services-grid > h2,
 .recommendations-grid > h2 {
   text-align: center;
@@ -3404,11 +3412,11 @@ form .grid__item {
   width: 70%;
 
   h3 {
-    font-weight: bold;
     padding-bottom: 12px;
   }
   hr {
     margin-top: 0;
+    width: 100%;
   }
 }
 

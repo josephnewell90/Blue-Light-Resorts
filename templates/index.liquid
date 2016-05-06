@@ -24,9 +24,9 @@
         <img src="{{ 'slider1.png' | asset_url }}" />
         <figcaption class="text-center large--one-fourth grid--full medium-down--hide {{ settings.slide_1_text_position }}">
           <div class="three-fourths">
-            <h1 class="text-right">{{ settings.splash_header }}</h1>
-            <p class="text-right">{{ settings.splash_text }}</p>
-            <a href="{{ settings.slide_1_button_link }}" class="text-center two-thirds right btn">{{ settings.splash_button_label }}</a>
+            <h1 class="text-right">{{ settings.slide_1_header }}</h1>
+            <p class="text-right">{{ settings.slide_1_text }}</p>
+            <a href="{{ settings.slide_1_button_link }}" class="text-center two-thirds right btn">{{ settings.slide_1_button_label }}</a>
           </div>
         </figcaption>
       </figure>
@@ -39,9 +39,9 @@
         <img src="{{ 'slider2.png' | asset_url }}" />
         <figcaption class="text-center large--one-fourth grid--full medium-down--hide {{ settings.slide_2_text_position }}">
           <div class="three-fourths">
-            <h1 class="text-right">{{ settings.splash_header }}</h1>
-            <p class="text-right">{{ settings.splash_text }}</p>
-            <a href="{{ settings.slide_2_button_link }}" class="text-center two-thirds right btn">{{ settings.splash_button_label }}</a>
+            <h1 class="text-right">{{ settings.slide_2_header }}</h1>
+            <p class="text-right">{{ settings.slide_2_text }}</p>
+            <a href="{{ settings.slide_2_button_link }}" class="text-center two-thirds right btn">{{ settings.slide_2_button_label }}</a>
           </div>
         </figcaption>
       </figure>
@@ -54,9 +54,9 @@
         <img src="{{ 'slider3.png' | asset_url }}" />
         <figcaption class="text-center large--one-fourth grid--full medium-down--hide {{ settings.slide_3_text_position }}">
           <div class="three-fourths">
-            <h1 class="text-right">{{ settings.splash_header }}</h1>
-            <p class="text-right">{{ settings.splash_text }}</p>
-            <a href="{{ settings.slide_3_button_link }}" class="text-center two-thirds right btn">{{ settings.splash_button_label }}</a>
+            <h1 class="text-right">{{ settings.slide_3_header }}</h1>
+            <p class="text-right">{{ settings.slide_3_text }}</p>
+            <a href="{{ settings.slide_3_button_link }}" class="text-center two-thirds right btn">{{ settings.slide_3_button_label }}</a>
           </div>
         </figcaption>
       </figure>
@@ -69,9 +69,9 @@
         <img src="{{ 'slider4.png' | asset_url }}" />
         <figcaption class="text-center large--one-fourth grid--full medium-down--hide {{ settings.slide_4_text_position }}">
           <div class="three-fourths">
-            <h1 class="text-right">{{ settings.splash_header }}</h1>
-            <p class="text-right">{{ settings.splash_text }}</p>
-            <a href="{{ settings.slide_4_button_link }}" class="text-center two-thirds right btn">{{ settings.splash_button_label }}</a>
+            <h1 class="text-right">{{ settings.slide_4_header }}</h1>
+            <p class="text-right">{{ settings.slide_4_text }}</p>
+            <a href="{{ settings.slide_4_button_link }}" class="text-center two-thirds right btn">{{ settings.slide_4_button_label }}</a>
           </div>
         </figcaption>
       </figure>
@@ -85,9 +85,9 @@
     <img src="{{ 'homeSplash.png' | asset_url }}">
     <figcaption class="text-center large--one-fourth grid--full medium-down--hide">
       <div class="three-fourths">
-        <h1 class="text-right">{{ settings.splash_header }}</h1>
-        <p class="text-right">{{ settings.splash_text }}</p>
-        <a href="/#cabins" class="text-center two-thirds right btn">{{ settings.splash_button_label }}</a>
+        <h1 class="text-right">{{ settings.slide_2_header }}</h1>
+        <p class="text-right">{{ settings.slide_2_text }}</p>
+        <a href="/#cabins" class="text-center two-thirds right btn">{{ settings.slide_1_button_label }}</a>
       </div>
     </figcaption>
   </figure>
@@ -109,14 +109,14 @@
 {% endcomment %}
 
 <div class="text-center wrapper main-text" id="home-header">
-  <h2>{{ settings.first_text_header }}</h2>
-  <hr class="one-sixth text-center">
   <h3>{{ settings.first_text_subheader }}</h3>
+  <hr class="one-sixth text-center">
+  <h2>{{ settings.first_text_header }}</h2>
   <p class="">{{ settings.first_text_text }}</p>
   <hr class="one-sixth text-center">
   <h4>{{ settings.first_phone_header }}</h4>
   <span>{{ settings.first_phone_number }}</span>
-  <span class="subText grid__item text-center no-padding medium-down--hide"><a href="/#cabins">SCROLL TO VIEW CABINS</a></span>
+  <p class="activities-sub-heading">SCROLL TO VIEW CABINS</p>
 </div>
 
 {% comment %}
@@ -187,7 +187,7 @@
   <p>{{ settings.second_text_text }}</p>
   <h4>{{ settings.second_phone_header }}</h4>
   <span class="grid__item  no-padding">{{ settings.second_phone_number }}</span>
-  <a href="/concierge" class="btn">{{ settings.splash_button_label }}</a>
+  <a href="/concierge" class="btn">{{ settings.second_button_label }}</a>
 
 </div>
 
