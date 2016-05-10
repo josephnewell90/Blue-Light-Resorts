@@ -65,6 +65,18 @@
       });
     </script>
   {% endif %}
+  {% if template == "product" %}
+    {{ 'jquery.flexslider-min.js' | asset_url | script_tag }}
+    {{ 'flexslider.css' | asset_url | stylesheet_tag }}
+    <script>
+      $(window).load(function() {
+        $('.flexslider').flexslider({
+          animation: "fade",
+          controlNav: "thumbnails"
+        });
+      });
+    </script>
+  {% endif %}
 
 </head>
 
@@ -85,9 +97,11 @@
     </div>
     <!-- begin mobile-nav -->
     <ul class="mobile-nav">
+      {% comment %}
       <li class="mobile-nav__item mobile-nav__search">
         {% include 'search-bar' %}
       </li>
+      {% endcomment %}
       {% for link in linklists.main-menu.links %}
         {% comment %}
           Create a dropdown menu by naming a linklist the same as a link in the parent nav
@@ -169,7 +183,7 @@
     <div id="CartContainer"></div>
   </div>
   <div id="PageContainer" class="is-moved-by-drawer">
-    <header class="site-header" role="banner">
+    <header class="site-header grid--table" role="banner">
       <div class="site-header__logo-container">
         {% comment %}
           Use the uploaded logo from theme settings if enabled.

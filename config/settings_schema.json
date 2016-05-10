@@ -435,6 +435,12 @@
         "id": "second_phone_number",
         "label": "Number",
         "default": "801-334-2003"
+      },
+      {
+        "type": "text",
+        "id": "second_button_label",
+        "label": "Button Label",
+        "default": "ABOUT OUR CONCIERGE SERVICES"
       }
     ]
   },
