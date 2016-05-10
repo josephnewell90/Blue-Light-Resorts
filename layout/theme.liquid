@@ -65,6 +65,18 @@
       });
     </script>
   {% endif %}
+  {% if template == "product" %}
+    {{ 'jquery.flexslider-min.js' | asset_url | script_tag }}
+    {{ 'flexslider.css' | asset_url | stylesheet_tag }}
+    <script>
+      $(window).load(function() {
+        $('.flexslider').flexslider({
+          animation: "fade",
+          controlNav: "thumbnails"
+        });
+      });
+    </script>
+  {% endif %}
 
 </head>
 

@@ -10,84 +10,40 @@
 {% endcomment %}
 
 <script>
-//Initialize the tab content with overview metadata
 $(document).ready(function() {
-  var overviewContent = $("#overviewContent").html().trim().split("\n");
-  var overviewContentHTML = [];
-  for (var i = 0; i < overviewContent.length; i++) {
-    if (overviewContent[i] !== '' || overviewContent[i] !== '  ' ) {
-      overviewContentHTML[i] = "<li>" + overviewContent[i] + "</li>";
+  function changeTabContent(id, order) {
+    var content = $(id).html().trim().split("\n");
+    var contentHtml = [];
+    for (var i = 0; i < content.length; i++) {
+      if (content) {
+        contentHtml.push("<li>" + content[i].trim() + "</li>");
+        $('#tabContent').css('order', '1');
+      }
     }
+    return $('#tabContent').html(contentHtml);
   }
 
-  return $("#tabContent").html(overviewContentHTML);
-});
+  //Initialize the tab content with overview metadata
+  changeTabContent('#overviewContent', 1);
 
-//When user clicks on a tab, insert the appropriate metadata into the #tabContent
-$(document).ready(function() {
+  //When user clicks on a tab, insert the appropriate metadata into the #tabContent
   $(".tab").click(function() {
     //Assign the current tab, unassign any others
     $(".tab").removeClass("active");
     $(this).addClass("active");
     //Get which key of the metadata we are using and assign the hidden content to be the content in the tabContent div
     if ($(this).hasClass("overview")) {
-      var overviewContent = $("#overviewContent").html().trim().split("\n");
-      var overviewContentHTML = [];
-      for (var i = 0; i < overviewContent.length; i++) {
-        if (overviewContent[i] !== '') {
-          overviewContentHTML[i] = "<li>" + overviewContent[i].trim() + "</li>";
-          $('#tabContent').css('order', '1');
-          $('#tabContent').css('-webkit-order', '1');
-        }
-      }
-
-      return $("#tabContent").html(overviewContentHTML);
+      changeTabContent('#overviewContent', 1);
     }
     else if ($(this).hasClass("suites")) {
-      var suitesContent = $("#suitesContent").html().trim().split("\n");
-      var suitesContentHTML = [];
-      for (var i = 0; i < suitesContent.length; i++) {
-        suitesContentHTML[i] = "<li>" + suitesContent[i] + "</li>";
-        $('#tabContent').css('order', '2');
-        $('#tabContent').css('-webkit-order', '2');
-      }
-
-      return $("#tabContent").html(suitesContentHTML);
+      changeTabContent('#suitesContent', 2);
     }
     else if ($(this).hasClass("kitchen")) {
-      var kitchenContent = $("#kitchenContent").html().trim().split("\n");
-      var kitchenContentHTML = [];
-      for (var i = 0; i < kitchenContent.length; i++) {
-        kitchenContentHTML[i] = "<li>" + kitchenContent[i] + "</li>";
-        $('#tabContent').css('order', '3');
-        $('#tabContent').css('-webkit-order', '3');
-      }
-
-      return $("#tabContent").html(kitchenContentHTML);
+      changeTabContent('#kitchenContent', 3);
     }
     else if ($(this).hasClass("grounds")) {
-      var groundsContent = $("#groundsContent").html().trim().split("\n");
-      var groundsContentHTML = [];
-      for (var i = 0; i < groundsContent.length; i++) {
-        groundsContentHTML[i] = "<li>" + groundsContent[i] + "</li>";
-        $('#tabContent').css('order', '4');
-        $('#tabContent').css('-webkit-order', '4');
-      }
-
-      return $("#tabContent").html(groundsContentHTML);
+      changeTabContent('#groundsContent', 4);
     }
-    else if ($(this).hasClass("recreation")) {
-      var recreationContent = $("#recreationContent").html().trim().split("\n");
-      var recreationContentHTML = [];
-      for (var i = 0; i < recreationContent.length; i++) {
-        recreationContentHTML[i] = "<li>" + recreationContent[i] + "</li>";
-        $('#tabContent').css('order', '5');
-        $('#tabContent').css('-webkit-order', '5');
-      }
-
-      return $("#tabContent").html(recreationContentHTML);
-    }
-    //Assign the content in the #tabContent div to currentMetadata
   });
 });
 </script>
@@ -116,12 +72,6 @@ $(document).ready(function() {
   </div>
 {% endif %}
 
-{% if product.metafields.c_f.recreation %}
-  <div hidden id="recreationContent">
-      {{ product.metafields.c_f.recreation }}
-  </div>
-{% endif %}
-
 <div itemscope itemtype="http://schema.org/Product">
 
   <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
@@ -132,36 +82,31 @@ $(document).ready(function() {
   {% endcomment %}
   {% assign current_variant = product.selected_or_first_available_variant %}
 
-    <div class="grid--full product-single">
+  {% if product.images %}
+  <div class="flexslider large--ten-twelfths" style="margin: 0 auto;">
+    <ul class="slides">
+      {% for image in product.images %}
+      <li data-thumb='{{ image.src | img_url: 'compact' }}'>
+        <img src="{{ image.src | img_url: '1024x1024' }}" alt="{{ image.alt | escape }}">
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+  <div class="grid--full product-single">
     <div class="grid__item text-center">
-      <div class="product-single__photos" id="ProductPhoto">
-        {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
-        <img src="{{ featured_image | img_url: '1024x1024' }}" alt="{{ featured_image.alt | escape }}" id="ProductPhotoImg">
-      </div>
 
-      <span class="large--hide"><< swipe to see more images >></span>
+
+      <span class="large--hide">&lt;&lt; swipe to see more images &gt;&gt;</span>
 
       {% comment %}
         Create thumbnails if we have more than one product image
       {% endcomment %}
-      {% if product.images.size > 1 %}
-        <ul class="product-single__thumbnails grid-uniform text-center" id="ProductThumbs">
-
-          {% for image in product.images %}
-            <li class="grid__item one-twelfth">
-              <a href="{{ image.src | img_url: 'master' }}" class="product-single__thumbnail">
-                <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
-              </a>
-            </li>
-          {% endfor %}
-
-        </ul>
-      {% endif %}
     </div>
 
     <div class="grid__item text-center product-content">
       <div class="wrapper main-text">
-        <h1 itemprop="name">{{ product.title }}</h1>
+        <h2 itemprop="name">{{ product.title }}</h2>
         <hr class="one-sixth">
 
         <div class="product-description rte" itemprop="description">
@@ -192,13 +137,7 @@ $(document).ready(function() {
           {% if product.metafields.c_f.grounds %}
             ><li class="tab grounds medium-down--two-thirds grid__item noFloat">
                 GROUNDS
-            </li
-          {% endif %}
-
-          {% if product.metafields.c_f.recreation %}
-            ><li class="tab recreation medium-down--two-thirds grid__item noFloat">
-                RECREATION
-            </li>
+          	</li>
           {% endif %}
 
           <div id="tabContent" class="wrapper main-text">

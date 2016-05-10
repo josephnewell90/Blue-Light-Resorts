@@ -1997,7 +1997,7 @@ label.error {
   z-index: 3;
 
   @include at-query ($min, $large){
-    padding: $gutter 0;
+    padding: ($gutter / 2) 0;
     color: white;
     display: flex;
     width: 100%;
@@ -2043,6 +2043,7 @@ header div.grid__item h1 a img {
     display: flex;
     align-items: center;
     margin-right: auto;
+    flex-shrink: 0;
   }
 }
 
@@ -2571,13 +2572,30 @@ header div.grid__item h1 a img {
 .template-index .grid__item.large--five-twelfths.no-padding.text-center p {
     padding: 25px 20% 10px;
 }
-.cabin-title {
-  text-transform: uppercase;
-}
 
 /*============================================================================
   #Product Page
 ==============================================================================*/
+.template-product .flexslider {
+  margin-bottom: 0;
+}
+
+.flex-control-thumbs {
+  display: none;
+
+  li {
+    padding-top: 30px;
+
+    &:not(:last-child) {
+      margin-right: 3%;
+    }
+  }
+
+  @include at-query($min, $large) {
+    display: flex;
+  }
+}
+
 .product-single__variants {
   display: none;
 
@@ -2741,6 +2759,7 @@ form .grid__item.large--ten-twelfths.text-center.noFloat {
 
  @include at-query ($min, $large) {
    width: auto;
+   padding: 0 1.5em;
  }
 }
 
@@ -3101,24 +3120,22 @@ form .grid__item.large--ten-twelfths.text-center.noFloat {
 
 .cabin-title {
   font-family: "Quattrocento", serif;
-  font-size: 35px;
+  font-size: 2em;
   font-style:normal;
-
+  text-transform: uppercase;
 }
  .cabin-title a{
-   font-size: 35px;
+
    color: #000;
    padding-bottom:47px;
  }
- .text-center{
-   span {
-     font-family:"Quattrocento", serif;
-     font-size: 2em;
-     font-style: normal;
-     letter-spacing: .21em;
-     color: $colorBtnPrimary;
-     padding-bottom: 50px;
-  }
+.phone-number {
+  font-family:"Quattrocento", serif;
+  font-size: 2em;
+  font-style: normal;
+  letter-spacing: .21em;
+  color: $colorBtnPrimary;
+  padding-bottom: 50px;
 }
 .subText a{
   font-size: 18px;
@@ -3131,15 +3148,6 @@ form .grid__item.large--ten-twelfths.text-center.noFloat {
 
 div.product-single__photos img {
     padding: 0 1em;
-}
-
-.product-single span {
-  font-size: .7em;
-  font-style: italic;
-  color: black;
-  margin: 1em 0;
-  padding: 0;
-  display: block;
 }
 
 form .grid__item {
@@ -3173,6 +3181,10 @@ form .grid__item {
     font-size: 1.5em;
     padding-bottom: 16px;
     padding-top: 80px;
+
+    @include at-query($max, $small) {
+      padding-top: 20px;
+    }
   }
 
   hr {
@@ -3214,19 +3226,17 @@ form .grid__item {
 
 .activity-content {
   text-align: center;
-  padding: 80px 50px;
+  padding: 80px 15%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 70%;
   margin: 0 auto;
   align-items: center;
   order: 1;
 }
 @include at-query($min, $medium) {
   .activity-content {
-    max-width: 35%;
-    padding: 0 50px;
+    padding: 0 10%;
     order: initial;
   }
 }
