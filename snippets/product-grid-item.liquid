@@ -60,7 +60,7 @@
   {% assign isEven = count | modulo:2 %}
   {% if isEven == 1 %}
     <a href="{{ product.url | within: collection }}" class="grid__item large--seven-twelfths no-padding even">
-      <img src="{{ product.featured_image.src | img_url: 'master' }}" alt="{{ product.featured_image.alt | escape }}">
+      <img src="{{ product.featured_image.src | img_url: '1024x1024' }}" alt="{{ product.featured_image.alt | escape }}">
     </a>
     <div class="grid__item large--five-twelfths no-padding text-center">
       <p class="cabin-title">
@@ -83,8 +83,8 @@
       {% comment %}<a href="{{ product.url | within: collection }}/#reservation" class="italic">CHECK AVAILABILITY</a>{% endcomment %}
     </div>
 
-    <a href="{{ product.url | within: collection }}" class="grid__item large--seven-twelfths no-padding">
-      <img src="{{ product.featured_image.src | img_url: 'master' }}" alt="{{ product.featured_image.alt | escape }}">
+    <a href="{{ product.url | within: collection }}" class="grid__item large--seven-twelfths text-right no-padding">
+      <img src="{{ product.featured_image.src | img_url: '1024x1024' }}" alt="{{ product.featured_image.alt | escape }}">
     </a>
 
   {% endif %}
