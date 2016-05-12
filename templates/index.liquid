@@ -136,7 +136,7 @@
   Use class grid-uniform to have evenly sized columns clear
   each other properly at each breakpoint.
 {% endcomment %}
-<div class="grid--full">
+<div class="grid--full" id="cabins">
 
   {% comment %}
     Loop through products in your Frontpage collection.
@@ -231,7 +231,7 @@ THIS IS ALL COMMENTED out
       {% unless collection.handle == 'frontpage' %}
         {% assign isEmpty = false %}
         {% assign collection_item_width = 'large--one-fifth medium--one-third' %}
-        <div class="grid__item text-center" id="cabins">
+        <div class="grid__item text-center">
           {% comment %}
             Use capture to put the collection title in a variable that is used in liquid filters
           {% endcomment %}
