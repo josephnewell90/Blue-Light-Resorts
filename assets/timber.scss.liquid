@@ -3222,6 +3222,9 @@ form .grid__item {
   .flex-grid {
     flex-direction: row;
   }
+  .flex-grid:nth-child(even) {
+    flex-direction: row-reverse;
+  }
   .flex-grid__item {
     flex: 0 0 50%;
   }
@@ -3235,12 +3238,10 @@ form .grid__item {
   justify-content: center;
   margin: 0 auto;
   align-items: center;
-  order: 1;
 }
 @include at-query($min, $medium) {
   .activity-content {
     padding: 0 10%;
-    order: initial;
   }
 }
 
